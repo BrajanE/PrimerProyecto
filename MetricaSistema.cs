@@ -28,12 +28,12 @@ namespace PrimerProyecto
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"Fecha actual: {FechaHora}");
-            sb.AppendLine($"Uso CPU: {UsoCpu} %");
-            sb.AppendLine($"Temperatura CPU: {TempCpu} °C");
-            sb.AppendLine($"Uso GPU: {UsoGpu} %");
-            sb.AppendLine($"Temperatura GPU: {TempGpu} °C");
-            sb.AppendLine($"Uso vRAM en MB: {VidRam}");
-            sb.AppendLine($"Uso RAM en MB: {UsoRam}");
+            sb.AppendLine($"Uso CPU: {UsoCpu:F2} %");
+            sb.AppendLine($"Temperatura CPU: {TempCpu:F2} °C");
+            sb.AppendLine($"Uso GPU: {UsoGpu:F2} %");
+            sb.AppendLine($"Temperatura GPU: {TempGpu:F2} °C");
+            sb.AppendLine($"Uso vRAM en GB: {VidRam:F2}");
+            sb.AppendLine($"Uso RAM en GB: {UsoRam:F2}");
             Console.WriteLine(sb);
         }
     }
