@@ -21,6 +21,7 @@
             pc_1.MostrarEnPantalla();
             pc.TerminarMonitoreo();
 
+           
         }
     }
 }
