@@ -1,5 +1,6 @@
 ﻿using LibreHardwareMonitor.Hardware;
 
+
 namespace PrimerProyecto
 {
     public class LectorHardware
@@ -18,6 +19,7 @@ namespace PrimerProyecto
                 IsMemoryEnabled = true,
             };
             pcMasterRace.Open();
+
 
             foreach (IHardware componente in pcMasterRace.Hardware)
             {
@@ -38,6 +40,7 @@ namespace PrimerProyecto
                 }
             }
         }
+
         public void TerminarMonitoreo()
         {
             pcMasterRace.Close();
@@ -57,12 +60,9 @@ namespace PrimerProyecto
                 foreach (ISensor sensor in cpu.Sensors)
                 {
 
-                    if (sensor.SensorType == SensorType.Load)
+                    if (sensor.SensorType == SensorType.Load && sensor.Name.Contains("Total"))
                     {
-                        if (sensor.Name.Contains("Total"))
-                        {
-                            usoCpu = sensor.Value ?? 0;
-                        }
+                        usoCpu = sensor.Value ?? 0;
                     }
 
                     if (sensor.SensorType == SensorType.Temperature)
@@ -76,7 +76,9 @@ namespace PrimerProyecto
                     }
 
                 }
+
                 // A FALTA DE SENSOR DE TEMPERATUA ACCESIBLE POR EL MOMENTO USARE ESTA FORMULA GENERAL
+
                 if (tempCpu == 0)
                 {
                     tempCpu = 35.0f + (usoCpu * 0.45f);
@@ -146,7 +148,42 @@ namespace PrimerProyecto
 
                 }
             }
-            return new MetricaSistema(usoCpu, tempCpu, usoGpu, tempGpu, vidRam, usoRam);
+            
+            string nombreCpu = "Nombre CPU no detectado";
+            if (cpu != null) { nombreCpu = cpu.Name; }
+            string nombreGpu = "Nombre GPU no detectado";
+            if (gpus != null && gpus.Count > 0)
+            {
+                IHardware gpuAux = null;
+                foreach (IHardware gpu in gpus)
+                {
+                    if (gpu.HardwareType == HardwareType.GpuNvidia)
+                    {
+                        gpuAux = gpu;
+                        break;
+                    }
+                    if (gpu.HardwareType == HardwareType.GpuAmd && !gpu.Name.Contains("Graphics"))
+                    {
+                        gpuAux = gpu;
+                        break;
+                    }
+                    if (gpu.HardwareType == HardwareType.GpuIntel && gpu.Name.Contains("Arc"))
+                    {
+                        gpuAux = gpu;
+                        break;
+                    }
+                }
+                if (gpuAux != null)
+                {
+                    nombreGpu = gpuAux.Name;
+                }
+                else
+                {
+                    nombreGpu = gpus[0].Name;
+                }
+            }
+            
+            return new MetricaSistema(nombreCpu, nombreGpu, usoCpu, tempCpu, usoGpu, tempGpu, vidRam, usoRam);
         }
 
     }
